@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Manager Home</title>
+<th:block th:include="layout/header"></th:block>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+<body align="center">
+
+<div class="w3-container">
+  <a th:href="@{/leave/apply}" class="w3-button w3-black">Apply Leave</a>
+</div>
+<br><br>
+<div class="w3-container">
+  <a th:href="@{/leave/history}" class="w3-button w3-black">View Personal History</a>
+</div>
+<br><br>
+<div class="w3-container">
+  <a th:href="@{/leave/claim}"  class="w3-button w3-black">Claim Compensation</a>
+</div>
+<br><br>
+<div class="w3-container">
+  <a th:href="@{/manageleave}" class="w3-button w3-black">Manage Employee Leave</a>
+</div>
+<br><br>
+<div class="w3-container">
+  <a th:href="@{/report}" class="w3-button w3-black">Generate Report</a>
+</div>
+<br><br>
+</body>
+</body>
+</html>

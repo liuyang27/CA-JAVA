@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Employee Details</title>
+<th:block th:include="layout/header"></th:block>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}">
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+
+</head>
+<body style="margin: 0px 50px" th:object="${leavedetail}">
+		<h1 style="text-align:center">Leave Details</h1>
+		<br/>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">Employee ID:</label> 
+			<span th:text="*{employee.id}"></span>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">Name:</label> 
+			<span th:text="*{employee.name}"></span>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">Status:</label> 
+			<span th:text="*{leaveStatus}"></span>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">Leave Category:</label>
+			<span th:text="*{category}"></span>			
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">From:</label>
+			<span th:text="*{#strings.substring(start,0,10)}"></span>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">To:</label>
+			<span th:text="*{#strings.substring(end,0,10)}"></span>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">Number of Days:</label>
+		    <span th:text="*{numOfDays}"></span>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">Reason:</label>
+			<textarea rows="3" cols="80" th:text="*{reason}" readonly="readonly"></textarea>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">WorkDissemination:</label>
+			<textarea rows="3" cols="80" th:text="*{workDissemination}" readonly="readonly"></textarea>
+		</div>
+		<div class="form-group">
+			<label for="contactDetails" class="col-sm-3 control-label">ContactDetails:</label>
+			<textarea rows="3" cols="80" th:text="*{contactDetails}" readonly="readonly"></textarea>
+		</div>
+		<div class="form-group">
+			<label for="contactDetails" class="col-sm-3 control-label">Manager Comments:</label>
+			<textarea rows="3" cols="80" th:text="*{managerComments}" readonly="readonly"></textarea>
+		</div>
+
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="button" class="btn btn-default" onclick="javascript:history.back(-1);">Back</button>
+			</div>
+		</div>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Leave History</title>
+
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}">
+<link rel="stylesheet" th:href="@{/css/jquery.dataTables.min.css}">
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/jquery.dataTables.min.js}"></script>
+</head>
+<body style="margin:30px">
+<h1 style="text-align:center">Leave History</h1><br/>
+
+<div th:if="${not #lists.isEmpty(leaveHistory)}">
+	<table class="table table-hover" id="myTable">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Category</th>
+				<th>From</th>
+				<th>To</th>
+				<th>Status</th>
+				<th>Operation</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="leave,leaveStat:${leaveHistory}">
+				<td th:text="${leaveStat.count}">ID</td>
+				<td th:text="${leave.category}">Category</td>				
+				<td th:text="${#strings.substring(leave.start,0,10)}">From</td>
+				<td th:text="${#strings.substring(leave.end,0,10)}">To</td>
+				<td th:text="${leave.leaveStatus}">Status</td>
+				<td><a th:href="@{'/leave/details/'+${leave.id}}"> Details </a> | <a th:if="(${leave.leaveStatus=='Applied'}) or (${leave.leaveStatus=='Updated'})"  th:href="@{'/leave/edit/'+${leave.id}}"> Edit </a><span th:unless="(${leave.leaveStatus=='Applied'}) or (${leave.leaveStatus=='Updated'}) or (${leave.leaveStatus=='Approved'})" th:text="Edit"></span><a th:if="${leave.leaveStatus=='Approved'}" th:href="@{'/leave/cancel/'+${leave.id}}" onclick="return warningCancel()">Cancel Leave</a><a th:if="(${leave.leaveStatus=='Applied'}) or (${leave.leaveStatus=='Updated'})" th:href="@{'/leave/delete/'+${leave.id}}" onclick="return warningDelete()"> | Delete </a></td>
+			</tr>
+			
+		</tbody>
+	</table>
+</div>
+			<div class="col-sm-offset-2 col-sm-10" style="display:inline">
+				<button type="button" class="btn btn-default" onclick="location.href='/HomePage'">Back</button>
+			</div>
+<script>
+
+function warningDelete(){
+    if(confirm('delet?')==true){
+       return true;
+    }else{
+       return false;
+    }
+}
+
+function warningCancel(){
+    if(confirm('Cancel the leave?')==true){
+       return true;
+    }else{
+       return false;
+    }
+}
+
+</script>
+
+
+
+</body>
+</html>

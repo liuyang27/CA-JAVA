@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Employee Details</title>
+<th:block th:include="layout/header"></th:block>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}">
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+
+</head>
+<body style="margin: 0px 50px">
+		<h1 style="text-align:center">Leave Details</h1>
+		<br/>
+		
+		<form class="form-horizontal" role="form" th:action="@{/ApproveRejectLeave}"
+		th:object="${leaveform}" method="post">
+		
+			<input type="hidden" th:field="*{id}" th:value="*{id}" />
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Employee ID:</label> 
+				<span th:text="*{employee.id}"></span>
+			</div>
+	
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Name:</label> 
+				<span th:text="*{employee.name}"></span>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Status:</label> 
+				<input th:field="*{leaveStatus}" readonly="readonly"></input>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Leave Category:</label>
+				<input th:field="*{category}" readonly="readonly"></input>			
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">From:</label>
+				<input th:field="*{start}" readonly="readonly"></input>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">To:</label>
+				<input th:field="*{end}" readonly="readonly"></input>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Number of Days:</label>
+			    <input th:field="*{numOfDays}" readonly="readonly"></input>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Reason:</label>
+				<textarea rows="3" cols="80" th:field="*{reason}" th:text="*{reason}" readonly="readonly"></textarea>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">WorkDissemination:</label>
+				<textarea rows="3" cols="80" th:field="*{workDissemination}" th:text="*{workDissemination}" readonly="readonly"></textarea>
+			</div>
+			<div class="form-group">
+				<label for="contactDetails" class="col-sm-3 control-label">ContactDetails:</label>
+				<textarea rows="3" cols="80" th:field="*{contactDetails}" th:text="*{contactDetails}" readonly="readonly"></textarea>
+			</div>
+			<div class="form-group">
+				<label for="contactDetails" class="col-sm-3 control-label">Manager Comments:</label>
+				<textarea rows="3" cols="80" th:field="*{managerComments}" th:text="*{managerComments}"></textarea>
+			</div>
+			<div class="form-group" style="position:absolute;left:33%">
+				<div class="col-sm-offset-2 col-sm-10" style="display:inline">
+					<button type="submit" class="btn btn-default"  onclick="return Approve();">Approve</button>
+				</div>
+				<div class="col-sm-offset-2 col-sm-10" style="display:inline">
+					<button type="submit" class="btn btn-default" onclick="return Reject();">Reject</button>
+				</div>
+			</div>
+		</form>
+
+		<br/><br/>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="button" class="btn btn-default" onclick="javascript:history.back(-1);">Back</button>
+			</div>
+		</div>
+		<hr/>
+		<h3>History</h3>
+		<table class="table table-hover" id="myTable" th:object="${empleavehistory}">
+
+			<tr>
+				<th>ID</th>
+				<th>Category</th>
+				<th>From</th>
+				<th>To</th>
+				<th>Status</th>
+				<th>Operation</th>
+			</tr>
+
+			<tr th:each="leave,leaveStat:${empleavehistory}" th:unless="(${leave.leaveStatus=='Applied'}) or (${leave.leaveStatus=='Updated'})">
+				<td th:text="${leaveStat.count}">ID</td>
+				<td th:text="${leave.category}">Category</td>				
+				<td th:text="${#strings.substring(leave.start,0,10)}">From</td>
+				<td th:text="${#strings.substring(leave.end,0,10)}">To</td>
+				<td th:text="${leave.leaveStatus}">Status</td>
+				<td><a th:href="@{'/leave/details/'+${leave.id}}" target="_blank"> Details </a></td>
+			</tr>
+
+	</table>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<script>
+		 function Approve(){
+			 
+			 var input = document.getElementById("leaveStatus");
+			 input.value="Approve";
+			 return true;
+		 }
+		 function Reject(){
+			 var input = document.getElementById("leaveStatus");
+			 input.value="Reject";
+			 return true;
+		 }
+	
+		</script>
+		
+</body>
+
+</html>

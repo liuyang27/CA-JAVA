@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta>
+<title>Apply Leave</title>
+<th:block th:include="layout/header"></th:block>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}">
+<link rel="stylesheet" th:href="@{/css/jquery.dataTables.css}">
+<link rel="stylesheet" th:href="@{/css/buttons.dataTables.min.css}">
+  
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/jquery.dataTables.js}"></script>
+<script th:src="@{/js/dataTables.buttons.js}"></script>
+<script th:src="@{/js/buttons.flash.js}"></script>
+<script th:src="@{/js/buttons.html5.js}"></script>
+<script th:src="@{/js/buttons.print.js}"></script>
+
+
+
+</head>
+<body style="margin: 0px 50px">
+	<h1 style="text-align:center">Report</h1>
+	<br/>
+	
+	
+		<div class="form-group">
+			<label for="from" class="col-sm-3 control-label">From:</label>
+			<input type="text" id="start" name="start"/> 
+		</div>
+		<div class="form-group">
+			<label for="to" class="col-sm-3 control-label">To:</label>
+			<input type="text" id="end" name="end"/>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10" style="display:inline">
+				<button type="button" id="btnsearch" name="btnsearch" class="btn btn-default">Search</button>
+			</div>
+			<div class="col-sm-offset-2 col-sm-10" style="display:inline">
+				<button type="button" class="btn btn-default" onclick="javascript:history.back(-1);">Back</button>
+			</div>
+		</div>
+		<hr/>
+
+		<div>
+			<table id="ReportTable" class="display">
+			   <thead>
+			   		<tr>
+			   			<th>Employee</th>
+			   			<th>Category</th>
+			   			<th>start</th>
+			   			<th>end</th>
+			   			<th>numOfDays</th>
+			   			<th>leaveStatus</th>
+			   		</tr>	
+			   </thead>
+			</table>
+
+		</div>
+		
+		
+	<script>
+	/*<![CDATA[*/
+	  $(function() {
+		  
+		    $( "#start" ).datepicker({
+		    	dateFormat: 'dd/mm/yy',
+		      defaultDate: "+1w",
+		      changeMonth: true,
+		      numberOfMonths: 1,
+		      onClose: function( selectedDate ) {
+		        $( "#end" ).datepicker( "option", "minDate", selectedDate );
+		      }
+		    });
+		    $( "#end" ).datepicker({
+		    	dateFormat: 'dd/mm/yy',
+		      defaultDate: "+1w",
+		      changeMonth: true,
+		      numberOfMonths: 1,
+		      onClose: function( selectedDate ) {
+		        $( "#start" ).datepicker( "option", "maxDate", selectedDate );
+		      }
+		    });
+		    
+		    $('#btnsearch').click(function(){
+				  var s1 =document.getElementById("start").value;
+				  s1=getFormatDate (s1);
+				  var start_date = new Date(s1);
+				  var s2 =document.getElementById("end").value;
+				  s2=getFormatDate (s2);
+
+				  $.ajax({  
+		             type:"POST",
+		              //contentType : "application/json", 
+		              dataType : "json", 
+		              //traditonal:true, 
+		              async: false,
+		              url:"/generateReport/ajax",               
+		              
+		              data : {
+		            	  "datefrom":s1,
+		            	  "dateto":s2
+		            	  },
+		              success:function(data){
+		            	  $('#ReportTable').DataTable({ 
+		            		  dom: 'Bfrtip',
+		            		    buttons: [
+		            		    	'copy', 'csv','pdf', 'print'
+		            		    ],
+								//"destroy": true,
+								destroy: true,
+				            	  data :data,
+								 columns: [
+								       // { data: "Id" },
+								        { data: "employeeid" },
+								        { data: "category" },
+								        { data: "start" },
+								        { data: "end" },
+								        { data: "numOfDays" },
+								        { data: "leaveStatus" }
+								    ]
+
+								
+	
+		            	  });
+
+		              },
+		              error:function(XMLHttpRequest, textStatus, errorThrown){
+		            	  alert("error");
+		            	  alert(XMLHttpRequest.status);
+		            	  alert(XMLHttpRequest.readyState);
+		            	  alert(textStatus);
+		              }
+		            
+			  	});
+		    }); 
+	  });
+	  
+	  function getFormatDate(s) {
+		  if(s==""){
+			  return "";
+		  }
+		  //var s=str;
+	      var year = s.substring(6,10);
+	      var month = s.substring(3,5);
+	      var day = s.substring(0,2);
+	      var dateStr = year + '-' + month + '-' + day;
+	      return dateStr;
+	  }
+	  
+	  $(document).ready(function(){
+		     $('#ReportTable').DataTable();
+		});
+	  
+	  /*]]>*/  
+	</script>
+
+
+</body>
+
+
+</html>

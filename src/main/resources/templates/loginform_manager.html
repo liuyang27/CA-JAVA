@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Login Form</title>
+<br/><br/><br/><br/><br/><br/>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+
+</head>
+<body>
+ <div class="container">
+    <h2 style="text-align:center">Manager Login</h2>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <form class="form-horizontal" th:action="@{/verifyManager}" method="post">
+          <div class="form-group">
+            <label for="label" class="col-sm-3 control-label">User:</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="userid" name="userid" placeholder="UserID">
+            </div>
+          </div>
+
+          <div class="form-group ">
+            <label for="exampleInputPassword1" class="col-sm-3 control-label">Password:</label>
+            <div class="col-sm-9">
+              <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+              <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+	<div align="center" th:if="${Error=='error'}">
+		<p style="font-size: 20; color: #FF1C19;">Id or Password invalid, please verify</p>
+	</div>
+</body>
+  
+</body>
+</html>

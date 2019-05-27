@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Apply Leave</title>
+<th:block th:include="layout/header"></th:block>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}">
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+
+</head>
+<body style="margin: 0px 50px">
+	<h1 style="text-align:center">Leave Application</h1>
+	<br/>
+
+	<form class="form-horizontal" role="form" th:action="@{/ApplyLeave}"
+		th:object="${leaveform}" method="post">
+		<input type="hidden" th:field="*{id}" th:value="*{id}" />
+
+		<div class="form-group">
+			<label for="firstname" class="col-sm-3 control-label">Employee ID:</label>
+			<span th:text="*{employee.id}"></span>
+		</div>
+
+		<div class="form-group">
+			<label for="firstname" class="col-sm-3 control-label">Name:</label>
+			<span th:text="*{employee.name}"></span>
+		</div>
+		<div class="form-group">
+			<label for="lastname" class="col-sm-3 control-label">Leave Category:</label>
+			<div class="col-sm-4">
+				<select class="form-control" id="category" name="category"
+					th:field="*{category}">
+					<option value="">Please Select...</option>
+					<option th:each="t:${leavetypes}" th:value="${t}" th:text="${t}">Annual
+						Leave</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="from" class="col-sm-3 control-label">From:</label>
+			<input type="text" th:field="*{start}" onchange="updateDays()"> 
+		</div>
+		<div class="form-group">
+			<label for="to" class="col-sm-3 control-label">To:</label>
+			<input type="text" th:field="*{end}" onchange="updateDays()">
+		</div>
+		<div class="form-group">
+			 <label for="numofdays" class="col-sm-3 control-label">Number of Days:</label>
+			 <input type="text" th:field="*{numOfDays}" readonly="readonly">
+		</div>
+		<div class="form-group">
+			<label for="numofdays" class="col-sm-3 control-label">Reason:</label>
+			<textarea rows="3" cols="80" th:field="*{reason}"></textarea>
+		</div>
+		<div class="form-group">
+			<label for="numofdays" class="col-sm-3 control-label">WorkDissemination:</label>
+			<textarea rows="3" cols="80" th:field="*{workDissemination}"></textarea>
+		</div>
+		<div class="form-group">
+			<label for="contactDetails" class="col-sm-3 control-label">ContactDetails:</label>
+			<textarea rows="3" cols="80" th:field="*{contactDetails}"></textarea>
+		</div>
+
+
+
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10" style="display:inline">
+				<button type="button" class="btn btn-default" onclick="location.href='/HomePage'">Cancel</button>
+			</div>
+			<div class="col-sm-offset-2 col-sm-10" style="display:inline">
+				<button type="submit" class="btn btn-default">Submit</button>
+			</div>
+		</div>
+	</form>
+
+
+	<script th:inline="javascript">
+ /*<![CDATA[*/
+  $(function() {
+    $( "#start" ).datepicker({
+    	dateFormat: 'dd/mm/yy',
+      defaultDate: "+1w",
+      changeMonth: true,
+      numberOfMonths: 1,
+      onClose: function( selectedDate ) {
+        $( "#end" ).datepicker( "option", "minDate", selectedDate );
+      }
+    });
+    $( "#end" ).datepicker({
+    	dateFormat: 'dd/mm/yy',
+      defaultDate: "+1w",
+      changeMonth: true,
+      numberOfMonths: 1,
+      onClose: function( selectedDate ) {
+        $( "#start" ).datepicker( "option", "maxDate", selectedDate );
+      }
+    });
+
+  });
+ 
+  function getFormatDate(s) {
+	  if(s==""){
+		  return "";
+	  }
+	  //var s=str;
+      var year = s.substring(6,10);
+      var month = s.substring(3,5);
+      var day = s.substring(0,2);
+      var dateStr = year + '-' + month + '-' + day;
+      return dateStr;
+  }
+  
+  function updateDays(){
+	  var s1 =document.getElementById("start").value;
+	  s1=getFormatDate (s1);
+	  var start_date = new Date(s1);
+	  var s2 =document.getElementById("end").value;
+	  s2=getFormatDate (s2);
+	  var end_date = new Date(s2);
+	  var dateDiff=(end_date-start_date)/86400000+1;
+	  
+	  if(s1!="" && s2!=""){
+		    var tempdate=start_date;
+			if(dateDiff<=14){
+				var weekEnds = 0; 
+			    for(var i = 0; i < dateDiff; i++) 
+			    { 
+			        if(tempdate.getDay() == 0 || tempdate.getDay() == 6) 
+			            weekEnds ++; 
+			        tempdate = tempdate.valueOf(); 
+			        tempdate += 1000 * 60 * 60 * 24; 
+			        tempdate = new Date(tempdate); 
+			    } 
+			    
+				//alert(dateDiff);
+				
+				var ph = [[${publicHolidays}]];
+				//var ph_date;
+			    for(var i = 0; i < ph.length; i++) 
+			    { 
+			    
+			    	var temp=ph[i].date;
+			    	//temp=temp.replace(/-/g, "/");
+			    	var ph_date = new Date(temp);
+
+			    	//alert('ph: '+ ph_date.getTime()+ 'ph day: '+ ph_date.getDay()+' start:'+start_date.getTime()+' end:'+ end_date.getTime());
+			    	if((ph_date.getTime()>=start_date.getTime()) && (ph_date.getTime()<=end_date.getTime()) && (ph_date.getDay() != 6) && (ph_date.getDay() != 0))
+			    	{
+			    		weekEnds ++;
+			    	}
+			    	
+			    	/*
+			    	if(ph_date.getDay() == 0){
+			    		var tempdate2=ph_date;
+			    		tempdate2 = tempdate2.valueOf(); 
+			    		tempdate2 += 1000 * 60 * 60 * 24; 
+			    		tempdate2 = new Date(tempdate2); 
+				        if(tempdate2.getTime()>=start_date.getTime() && tempdate2.getTime()<=end_date.getTime()){
+				    		weekEnds ++; 
+				        }
+			    	}*/
+			    	
+
+			    	//alert(ph_date.getTime());
+			    }
+			    var dateDiff=dateDiff-weekEnds;
+			
+
+			}
+			if(dateDiff<0){
+				dateDiff=0;
+			}
+			document.getElementById("numOfDays").value=dateDiff; 
+	  }
+ 
+	}
+  /*]]>*/  
+  </script>
+</body>
+
+
+</html>
